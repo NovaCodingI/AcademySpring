@@ -31,10 +31,10 @@
 <%@ include file="../common/header.jsp" %>
 
 <script type="text/javascript">
-	// 메세지 처리
-	let msg = '${msg}';
-	if(msg!=''){
-		alert(msg);
+	function requestAction(url){
+		// 폼이름을 확인해주세요 <form name="viewForm"
+		viewForm.action = url;
+		viewForm.submit();
 	}
 </script>
 
@@ -49,8 +49,7 @@
   <div class="list-group w-auto">
 <!-- 사용자를 입력을 입력받는(글쓰기) 같은 경우에는 post방식을 -->
 <!-- list나 상세화면, 페이지를 요청할때는 get방식 -->
-	<form method="post" action="/board/write">
-	<input type="text" name="bno" value="${board.bno}">
+	<form method="post" name="viewForm" action="/board/write">
 	<div class="mb-3">
 	  <label for="title" class="form-label">제목</label>
 	  <input name="title" id="title" type="text" class="form-control" value="${board.title}">
@@ -66,10 +65,21 @@
 	</div>
 	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-		<button type="submit" class="btn btn-primary btn-lg">글쓰기</button>
+		<!-- bno 값이 있으면 수정하기 res로 변수이름 담아주기 -->
+		<c:if test="${not empty board.bno }" var="res">
+			<!-- 빈문자열 오류가 날수있어요 -->
+			<input type="hidden" name="bno" value="${board.bno}">
+			<button type="submit" class="btn btn-primary btn-lg" 
+				onclick="requestAction('/board/editAction')">수정하기</button>
+				
+		</c:if>
+		<!-- 없으면 등록하기 -->
+		<c:if test="${not res}">
+			<button type="submit" class="btn btn-primary btn-lg">글쓰기</button>
+		</c:if>
+		
 		<button type="reset" class="btn btn-secondary btn-lg">초기화</button>
 	</div>
-	
 	</form>
   </div>
 </main>

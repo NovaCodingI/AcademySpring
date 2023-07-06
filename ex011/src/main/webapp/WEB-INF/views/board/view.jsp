@@ -30,26 +30,35 @@
 
 <%@ include file="../common/header.jsp" %>
 <script type="text/javascript">
-/*
+
 function requestAction(url){
 	viewForm.action=url;
 	viewForm.submit();
 }
-*/
+
 </script>
 <script>
+/*
 function submitForm(action) {
     var form = document.getElementById('editForm');
     form.action = action;
     form.submit();
 }
+*/
 </script>
 
 <main class="container">
   <div class="bg-light p-5 rounded">
     <h1>게시판 상세페이지</h1>
     <p class="lead">부트스트랩을 이용한 게시판 만들기</p>
+    <%-- 
     <a class="btn btn-lg btn-primary" href="/board/list" role="button">리스트 &raquo;</a>
+   	href="/board/list?pageNo=${pageDto.cri.pageNo}&searchField=${pageDto.cri.searchField}&searchWord=${pageDto.cri.searchWord}"
+    --%>
+    <a class="btn btn-lg btn-primary" 
+   	href="/board/list?pageNo=${param.pageNo}&searchField=${param.searchField}&searchWord=${param.searchWord}"
+    	role="button">
+    	리스트 &raquo;</a>
   </div>
   <p></p>
   <!-- 상세보기 -->
@@ -59,12 +68,15 @@ function submitForm(action) {
 	<%--
 	<form method="post" action="/board/edit">
 	--%>
-	<%-- form method="get" id="viewForm" 로 불러오면 get 오류나요 name='viewForm'으로 변경해주세요 --%>
-	<%-- 
-	<form method="get" name="viewForm">
+	<%--
+	form method="get" id="viewForm" 로 불러오면 get 오류나요 name='viewForm'으로 변경해주세요
+	<form method="post" action="/board/delete?bno=${board.bno}">
 	--%>
+	<form method="get" name="viewForm">
+	<%-- 
 	<form id="editForm" method="post" action="/board/edit">
-	<input type="text" name="bno" value="${board.bno }">
+	--%>
+	<input type="hidden" name="bno" value="${board.bno }">
 	<div class="mb-3">
 	  <label for="title" class="form-label">제목</label>
 	  <input name="title" id="title" type="text" readonly class="form-control" value='${board.title}' >
@@ -79,12 +91,15 @@ function submitForm(action) {
 	</div>
 	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-	<%-- 
 		<button type="submit" class="btn btn-primary btn-lg" onclick="requestAction('/board/edit')">수정</button>
+		<button type="button" class="btn btn-primary btn-lg" onclick="location.href='/board/delete?bno=${board.bno}'">삭제</button>
+	<%-- 
+		<!-- 함수를 이용해도 되고 location.href를 이용해도 되고 근데 location으로 하니까 반환이 안되네? 
+			대신 type을 button으로 해야됩니다. 돌아온다음 리다이렉트가 되어야하는데 submit으로 하면 삭제되고 리스트가 넘어가요 -->
 		<button type="submit" class="btn btn-primary btn-lg" onclick="requestAction('/board/delete')">삭제</button>
-	--%>
 		<button type="button" class="btn btn-primary btn-lg" onclick="submitForm('/board/edit')">수정</button>
 		<button type="button" class="btn btn-primary btn-lg" onclick="submitForm('/board/delete')">삭제</button>
+	--%>
 	</div>
 	</form>
 

@@ -21,8 +21,8 @@
 	*/
 	let msg = '${msg}';
 	
+	// let msg = "등록이 안됐어요";
 	window.onload = function(){
-		let msg = "등록이 안됐어요";
 		if(msg != ''){
 			document.querySelector(".modal-body").innerHTML = msg;
 			

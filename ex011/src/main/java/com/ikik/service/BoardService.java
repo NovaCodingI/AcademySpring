@@ -3,13 +3,17 @@ package com.ikik.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.ikik.vo.BoardVO;
+import com.ikik.vo.Criteria;
 
 @Service
 public interface BoardService {
 	
-	public List<BoardVO> getListXml();
+	
+	
+	public List<BoardVO> getListXml(Criteria cri, Model model);
 	
 	public int insert(BoardVO board);
 	
@@ -21,5 +25,5 @@ public interface BoardService {
 	
 	public int update(BoardVO board);
 	
-	public int getTotalCnt();
+	public int getTotalCnt(Criteria cri);
 }

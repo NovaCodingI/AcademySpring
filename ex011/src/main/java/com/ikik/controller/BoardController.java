@@ -2,8 +2,6 @@ package com.ikik.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ikik.mapper.BoardMapper;
 import com.ikik.service.BoardService;
 import com.ikik.vo.BoardVO;
+import com.ikik.vo.Criteria;
 
 import lombok.extern.log4j.Log4j;
 
@@ -53,15 +51,28 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
+	/**
+	 * 기본생성자가 있어야합니다.
+	 * 파라메터의 자동수집
+	 * 기본생성자를 이용해서 객체를 생성, 넘어온 데이터들을
+	 * -> setter 메서드를 이용해서 세팅
+	 * @param model
+	 * @param cri
+	 */
 //	@GetMapping("/board/list") //RequestMapping을 이용하여..
 	@GetMapping("list")
-	public void getList(Model model) {
-		List<BoardVO> list = boardService.getListXml();
+//	public void getList(Model model) {
+	public void getList(Model model, Criteria cri) {
+		boardService.getListXml(cri, model);
+		// 리스트를 더이상 반환하지 않아도 됩니다.
+//		List<BoardVO> list = boardService.getListXml();
+//		List<BoardVO> list = boardService.getListXml(cri, model);
 		log.info("========================");
-		log.info(list);
+		log.info("cri : " + cri);
+//		log.info("list : " + list);
 		log.info("========================");
 //		model.addAttribute("list", boardService.getListXml());
-		model.addAttribute("list", list);
+//		model.addAttribute("list", list);
 		
 	}
 	
@@ -92,6 +103,9 @@ public class BoardController {
 	
 	/**
 	 * ●RedirectAttributes
+	 * 
+	 * 	리다이렉트 URL의 화면까지 데이터 전달
+	 * 
 	 * 	Model과 같이 매개변수로 받아 사용
 	 * 	addFlashAttribute : 세션에 저장 후 페이지 전환 ( 세션에 잠깐 담았다가 지웁니다. )
 	 * 
@@ -104,6 +118,7 @@ public class BoardController {
 	 */
 	@PostMapping("write")
 	// 기본타입은 메모리 공간안에 바로 저장
+	// 페이지가 아니라 어떤 처리를 할꺼야 하면 같은 이름보다는 Action과 같이 뒤에 표시를 해주면 좋아요
 	public String writeAction(BoardVO board
 								, RedirectAttributes rttr
 								, Model model) {
@@ -139,10 +154,18 @@ public class BoardController {
 	    // return "write"; // WEB-INF/views/ + return + .jsp
 	}
 	
+	/**
+	 * 수정하기
+	 * 	- bno를 파라메터로 받아야 함
+	 * 	- 버튼, 버튼의 액션이 달라짐
+	 */
 	@GetMapping("edit")
 	public String edit(BoardVO paramVO, Model model) {
+		// 게시물 전부 조회했어요
 		BoardVO board = boardService.getOne(paramVO.getBno());
 		model.addAttribute("board", board);
+		
+		// 경로반환 : 글쓰기 페이지
 		return "/board/write";
 		
 		/* 혼자 해본거
@@ -173,6 +196,34 @@ public class BoardController {
 		*/
 	}
 	
+	@PostMapping("editAction")
+	public String editAction(BoardVO board
+							, RedirectAttributes rttr
+							, Model model) {
+
+		// 수정
+		int res = boardService.update(board);
+		
+		if(res>0) {
+			// addAttribute(파라메터 영역에 저장됩니다)
+//			model.addAttribute("msg", "수정 되었습니다.");
+			
+			// 세션영역에 저장
+			rttr.addFlashAttribute("msg", "수정되었습니다.");
+			// 상세페이지로 이동
+			// 다른 url를 호출하고싶은거에요 redirect해줘야죠 근데 메세지가 안떠 리퀘스트영역이 공유가 안되어있어서
+			// RedirectAttributes rttr 객체를 이용해서 사용합니다.
+			// Redirect 할때는 model에다 넣어도 소용이 없습니다. (request 영역이 공유 되지 않으므로)
+			return "redirect:/board/view?bno=" + board.getBno();
+		} else {
+			model.addAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
+//			rttr.addFlashAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
+			return "/board/message";
+		}
+		
+	}
+	
+	// 혼자 해보다가 망한것
 	@PostMapping("edit")
 	public String edit(BoardVO paramVO
 						, RedirectAttributes rttr
@@ -201,6 +252,24 @@ public class BoardController {
 		} else {
 			msg = "등록중 예외사항이 발생 하였습니다.";
 			model.addAttribute("msg", msg);
+			return "/board/message";
+		}
+	}
+	// 혼자 해보다가 망한것
+	
+	@GetMapping("delete")
+	public String delete(BoardVO board
+						, RedirectAttributes rttr
+						, Model model) {
+		
+		int res = boardService.delete(board.getBno());
+		System.out.println("================res" + res);
+		if(res>0) {
+			
+			rttr.addFlashAttribute("msg", "삭제되었습니다.");
+			return "redirect:/board/list";
+		} else {
+			model.addAttribute("msg", "삭제중 예외가 발생 하였습니다.");
 			return "/board/message";
 		}
 	}

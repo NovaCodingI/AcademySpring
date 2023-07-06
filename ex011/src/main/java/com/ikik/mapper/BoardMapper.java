@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Select;
 
 import com.ikik.vo.BoardVO;
+import com.ikik.vo.Criteria;
 
 public interface BoardMapper {
 
@@ -15,7 +16,7 @@ public interface BoardMapper {
 	public List<BoardVO> getList();
 
 	// 이름으로 만들었으니까 메서드만 만들어주셔도 됩니다.
-	public List<BoardVO> getListXml();
+	public List<BoardVO> getListXml(Criteria cri);
 	
 	// insert, delete, update 의 반환은 몇건이 처리되었는지 이기때문에 반환타입은 int 입니다.
 	public int insert(BoardVO board);
@@ -29,6 +30,6 @@ public interface BoardMapper {
 	
 	public int update(BoardVO board);
 	
-	public int getTotalCnt();
+	public int getTotalCnt(Criteria cri);
 	
 }

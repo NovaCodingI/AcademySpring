@@ -11,19 +11,31 @@
 	<!-- Tag안에는 조회문장 적어주시면 됩니다. 세미클론 제외하고 -->
 	
 	<!--
-	 select 태그 작성
+	 ●select 태그 작성
 		id				: mapper의 메서드명
 		resultType		: 기본타입
 						, 객체타입 (select쿼리의 결과를 특정 클래스의 객체로 저장)
 						쿼리 실행 결과를 resultType의 속성에 저장
 						
 		CDATA			: 파서가 마크업이 아닌 문자로만 해석 할 수 있도록 처리
-							XML에서 부등호를 사용하기 위해 사용 
+							XML에서 부등호를 사용하기 위해 사용
+							태그가 안에 있으면 작동을 안해요 
 	 -->
 	<select id="getListXml" resultType="com.ikik.vo.BoardVO">
 	<![CDATA[
-		select * from tbl_board where bno>0
+	select * 
+		from(
+			select t.*, rownum rn
+				from (
+					select * 
+					from tbl_board 
+					where bno>0 
 	]]>
+					<include refid="criteria"></include>
+					order by bno desc
+					) t
+				)
+		where rn between ${startNo} and ${endNo}
 	</select>
 	
 	<!-- 예전엔 input도 세팅해줘야했었는데 지금은 자동으로 처리가 다 됩니다. -->
@@ -61,13 +73,38 @@
 	</delete>
 	
 	<update id="update">
-		update tbl_board set title = #{title}, content = #{content}, updateDate = sysdate where bno = #{bno}
+		update tbl_board set title = #{title}, content = #{content}, writer=#{writer}
+									, updateDate = sysdate where bno = #{bno}
 	</update>
 	
 	<select id="getTotalCnt" resultType="int">
-		select count(*) from tbl_board
+		select count(*) 
+		from tbl_board
+		<!-- 1=1 true니까 검색 조건을 맞춰주는 -->
+		where 1=1
+		<include refid="criteria"></include>
 	</select>
 	
-	
+	<!-- 
+		●반복되는 쿼리를 미리 작성해 놓고 재활용 합니다
+			반복할 쿼리 선언 : <sql id="">
+			선언한 쿼리 사용 : <include refId="">
+			변수 사용 방법 <property name="">
+			
+			refId = reference id
+	-->
+	<sql id="criteria">
+		<choose>
+			<when test="searchField == 'title'">
+				and title like '%'||#{searchWord}||'%'
+			</when>
+			<when test="searchField == 'content'">
+				and content like '%'||#{searchWord}||'%'
+			</when>
+			<when test="searchField == 'writer'">
+				and writer like '%'||#{searchWord}||'%'
+			</when>
+		</choose>
+	</sql>
 	
 </mapper>
