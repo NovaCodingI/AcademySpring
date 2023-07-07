@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ikik.mapper.BoardMapper;
 import com.ikik.vo.BoardVO;
+import com.ikik.vo.Criteria;
 
 import lombok.extern.log4j.Log4j;
 
@@ -42,7 +43,7 @@ public class BoardTest {
 	@Test
 	public void getListXml() {
 		
-		List<BoardVO> list = boardMapper.getListXml();
+		List<BoardVO> list = boardMapper.getListXml(null);
 		
 		list.forEach(board ->{
 			log.info("boardVOXML======================");
@@ -121,7 +122,7 @@ public class BoardTest {
 	
 	@Test
 	public void getTotalCnt() {
-		int res = boardMapper.getTotalCnt();
+		int res = boardMapper.getTotalCnt(null);
 		
 		log.info("totalCnt : " + res);
 		

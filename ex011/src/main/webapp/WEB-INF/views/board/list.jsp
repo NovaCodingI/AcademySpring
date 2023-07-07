@@ -25,6 +25,7 @@
     <script type="text/javascript">
     
 	function requestAction(url, bno) {
+		// 폼이름을 확인!!
 		searchForm.action=url;
 		searchForm.bno.value=bno;
 		searchForm.submit();

@@ -35,21 +35,30 @@
 	  <ul class="pagination justify-content-end">
 	  <!-- 버튼에 대한 비활성화 처리 disabled -->
 	    <li class="page-item ${pageDto.prev? '':'disabled' }">
+	    <%-- board 버전
 	     <input class="page-link" type='button' value='Previous' onclick='go(${pageDto.startNo-1})'>
+	     --%>
+		 <a class="page-link"
+		  <c:if test="${pageDto.prev}">
+		  	onclick='go(${pageDto.startNo-1})'
+		  </c:if>
+		  href='#'>Previous</a>
 	     <%-- 
 	      <a class="page-link" href="/board/list?pageNo=${pageDto.startNo - 1}">Previous</a>
 	     --%>
 	    </li>
 		<c:forEach begin="${pageDto.startNo}" end="${pageDto.endNo}" var="i">
 	    <li class="page-item <c:if test="${i == pageDto.currentNo}">active</c:if>">
-	    	<%-- 
+	    	<%-- 링크버전 잘되는지 안되는지 모름
 	    	<input class="page-link}" type='button' value='${i }' onclick='go(${i})'>
 	    	--%>
+	    	<a class="page-link" onclick='go(${i})'>${i }</a>
+	    	<%-- board 버전
 	    	<input class="page-link ${pageDto.cri.pageNo==i ? 'active':''}" type='button' value='${i }' onclick='go(${i})'>
-	    	<%-- 
+	    	--%>
+	    	<%-- 링크버전 잘되는지 안되는지 모름
 	    	<a class="page-link" href="/board/list?pageNo=${i}">${i}
 	    	--%>
-	    	</a>
 	    </li>
 	    </c:forEach>
 	    <li class="page-item ${pageDto.next? '':'disabled' }">
