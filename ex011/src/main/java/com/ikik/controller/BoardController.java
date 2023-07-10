@@ -26,6 +26,12 @@ public class BoardController {
 	 *  WEB-INF/views/board/msg.jsp
 	 * @param model
 	 */
+	
+	@GetMapping("/reply/test")
+	public String test() {
+		return "/reply/test";
+	}
+	
 	@GetMapping("msg")
 	public void msg(Model model) {
 		

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ikik.mapper.ReplyMapper">
+
+	<select id="getList" resultType="com.ikik.vo.ReplyVO">
+		select rno, bno, reply, replyer,
+				to_char(replyDate, 'yyyy-MM-dd') as replyDate
+				, updateDate
+		from tbl_reply
+		where bno = ${bno}
+		order by rno desc
+	</select>
+	
+	<insert id="insert">
+		insert into tbl_reply (rno, bno, reply, replyer, replyDate)
+		values (seq_reply.nextval, #{bno}, #{reply}, #{replyer}, sysdate)
+	</insert>
+	
+	<update id="update">
+		update tbl_reply set  reply = #{reply}, replyer = #{reply}
+			, updatedate = sysdate where rno = #{rno}
+	</update>
+	
+	<delete id="delete">
+		delete tbl_reply where rno = #{rno}
+	</delete>
+</mapper>
