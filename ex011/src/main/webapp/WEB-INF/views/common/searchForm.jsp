@@ -7,11 +7,13 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%-- 
 페이지 dto : ${pageDto } <br>
 페이지 cri : ${pageDto.cri} <br>
 페이지 cri pageNo : ${pageDto.cri.pageNo} <br>
 페이지 cri searchField : ${pageDto.cri.searchField} <br>
 페이지 cri searchWord : ${pageDto.cri.searchWord} <br>
+--%>
 
 	<form class="row g-3" action="/board/list" 
 			method="get" name="searchForm">
@@ -19,8 +21,8 @@
 	<input type="text" name="pageNo" value="1">
 	--%>
 	<!-- Dto가 수집할때 페이지가 ... -->
-	<input type="text" name="bno" value="">
-	<input type="text" name="pageNo" value="${pageDto.cri.pageNo}">
+	<input type="hidden" name="bno" value="">
+	<input type="hidden" name="pageNo" value="${pageDto.cri.pageNo}">
 	  <div class="row g-3 justify-content-center">
 		  <div class="col-sm-3">
 		    <select name="searchField" class="form-select" 
