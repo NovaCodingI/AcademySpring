@@ -6,12 +6,19 @@
 <mapper namespace="com.ikik.mapper.ReplyMapper">
 
 	<select id="getList" resultType="com.ikik.vo.ReplyVO">
-		select rno, bno, reply, replyer,
-				to_char(replyDate, 'yyyy-MM-dd') as replyDate
-				, updateDate
-		from tbl_reply
-		where bno = ${bno}
-		order by rno desc
+	select * 
+		from (
+			select t.*, rownum rn
+			from(
+				select rno, bno, reply, replyer,
+						to_char(replyDate, 'yyyy-MM-dd') as replyDate
+						, updateDate
+				from tbl_reply
+				where bno = ${bno}
+				order by rno desc
+				) t
+			)
+	where rn between #{cri.startNo} and #{cri.endNo}
 	</select>
 	
 	<insert id="insert">
@@ -20,11 +27,22 @@
 	</insert>
 	
 	<update id="update">
-		update tbl_reply set  reply = #{reply}, replyer = #{reply}
-			, updatedate = sysdate where rno = #{rno}
+		update tbl_reply
+			set  reply = #{reply}
+			, updateDate = sysdate
+			where rno = #{rno}
 	</update>
 	
 	<delete id="delete">
 		delete tbl_reply where rno = #{rno}
 	</delete>
+	
+	<select id="totalCnt" resultType="int">
+		select count(*)
+			from tbl_reply
+			where bno=#{bno}
+	</select>
+	
+	
+	
 </mapper>

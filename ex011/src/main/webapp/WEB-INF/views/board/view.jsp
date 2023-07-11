@@ -76,7 +76,7 @@ function submitForm(action) {
 	<%-- 
 	<form id="editForm" method="post" action="/board/edit">
 	--%>
-	<input type="hidden" name="bno" value="${board.bno }">
+	<input type="hidden" name="bno" id="bno" value="${board.bno }">
 	<div class="mb-3">
 	  <label for="title" class="form-label">제목</label>
 	  <input name="title" id="title" type="text" readonly class="form-control" value='${board.title}' >
@@ -104,6 +104,8 @@ function submitForm(action) {
 	</form>
 
   </div>
+  
+  <%@include file="../reply/test.jsp" %>
 </main>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

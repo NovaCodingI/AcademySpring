@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ikik.service.ReplyService;
+import com.ikik.vo.Criteria;
+import com.ikik.vo.PageDto;
 import com.ikik.vo.ReplyVO;
 
 import lombok.extern.log4j.Log4j;
@@ -43,10 +45,30 @@ public class ReplyController {
 	 *	/reply/list/83
 	 * @return
 	 */
-	@GetMapping("/reply/list/{bno}")
-	public List<ReplyVO> getList(@PathVariable("bno") int bno){
+	@GetMapping("/reply/list/{bno}/{page}")
+//	public List<ReplyVO> getList(@PathVariable("bno") int bno, @PathVariable("page") int page){
+	public Map<String, Object> getList(@PathVariable("bno") int bno, @PathVariable("page") int page){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		log.info("bno : " + bno);
-		return service.getList(bno);
+		log.info("page : " + page);
+		
+		Criteria cri = new Criteria();
+		cri.setPageNo(page);
+		
+		// 페이지 처리(시작번호~끝번호)
+		List<ReplyVO> list = service.getList(bno, cri);
+		int totalCnt = service.totalCnt(bno);
+		
+		// 페이지블럭을 생성
+		PageDto pageDto = new PageDto(cri, totalCnt);
+		
+		map.put("list", list);
+		map.put("pageDto", pageDto);
+		
+		return map;
+//		return service.getList(bno, cri);
 	}
 	
 	@GetMapping("/reply/delete/{rno}")
@@ -84,6 +106,25 @@ public class ReplyController {
 			map.put("result", "fail");
 			map.put("message", "댓글 등록중 예외사항이 발생 하였습니다.");
 		}
+		return map;
+	}
+	
+	
+	@PostMapping("/reply/editAction")
+	public Map<String, Object> update(@RequestBody ReplyVO vo){
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int res = service.update(vo);
+		
+		if(res>0) {
+			map.put("result", "success");
+		} else {
+			map.put("result", "fail");
+			map.put("message", "댓글 수정중 예외사항이 발생 하였습니다.");
+		}
+		
+		
 		return map;
 	}
 	

@@ -17,5 +17,7 @@ public interface BookService {
 	public int getTotalCnt(Criteria cri);
 	
 	public BookVO getOne(int no, Model model);
+	
+	
 
 }
