@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://kit.fontawesome.com/7d9e0e4039.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	/* 스크립트로 메세지처리를 하게되면 통일성이 떨어져요?
 	// 메세지 처리
@@ -29,7 +30,8 @@
 	*/
 	let msg = '${msg}';
 	
-	window.onload = function(){
+	window.addEventListener('load', function(){
+//	window.onload = function(){
 		if(msg != ''){
 			// 메세지 출력
 			document.querySelector(".modal-body").innerHTML = msg;
@@ -41,7 +43,8 @@
 			});
 			// 모달 보여주기
 			myModal.show();
-		}
+//		}
+		};
 		
 		const myModalEl = document.getElementById('myModal')
 		// 모달창이 닫힐때 이벤트 처리
@@ -49,7 +52,7 @@
 	    // 뒤로가기
 		// history.go(-1);
 		// })
-	}
+	});
 	</script>
 
 </head>

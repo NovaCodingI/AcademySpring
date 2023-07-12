@@ -92,19 +92,26 @@ public class ReplyController {
 	 */
 	@PostMapping("/reply/insert")
 	public Map<String, Object> insert(@RequestBody ReplyVO vo){
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		
 		log.info("=============================insert");
 		log.info("replyVO" + vo);
 		log.info("=============================insert");
 		
-		int res = service.insert(vo);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		if(res>0) {
-			map.put("result", "success");
-		} else {
+		try {
+			int res = service.insert(vo);
+			
+			if(res>0) {
+				map.put("result", "success");
+			} else {
+				map.put("result", "fail");
+				map.put("message", "댓글 등록중 예외사항이 발생 하였습니다.");
+			}
+			
+		} catch (Exception e) {
 			map.put("result", "fail");
-			map.put("message", "댓글 등록중 예외사항이 발생 하였습니다.");
+			map.put("message", e.getMessage());
 		}
 		return map;
 	}

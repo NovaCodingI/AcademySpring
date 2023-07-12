@@ -287,7 +287,8 @@
 		// fetch, get방식은 url만 넘기면 되지만 post방식은 가지고갈 데이터도 포함해야합니다. 
 	}
 	
-	
+// /* reply.js로 파일 빼놓음
+	// get방식 요청
 	// 매개변수의 callback은 사용자가 입력해주는것이죠
 	function fetchGet(url, callback){
 //		console.log(url);
@@ -304,7 +305,7 @@
 			console.log('fetchGet', e);
 		}
 	}
-	
+	// post 방식 요청
 	// post방식은 데이터를 함께 넘겨주고싶은 것입니다.
 	// 공통함수 만들어주는게 굉장히 가벼워 지는것!
 	function fetchPost(url, obj, callback){
@@ -325,8 +326,7 @@
 				console.log('fetchPost', e);
 			}
 	}
-	
-	
+// */
 </script>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -338,6 +338,7 @@
 	<%-- 이걸 추가하면 게시물이 30번으로 고정되어서 나옵니다.
 	<input type="hidden" name="bno" id="bno" value="30">
 	--%>
+	<input type="text" name="bno" id="bno" value="30">
 	<!-- 필드로 page 값 1로 주는 방법도 있습니다. 파라메터로 가지고 다닐 필요가 없어집니다. 요소에 저장하기때문입니다. -->
 	<input type="hidden" name="page" id="page" value="1">
 	<input type="text" id="replyer" placeholder='작성자'>

@@ -2,12 +2,15 @@ package com.ikik.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ikik.service.BoardService;
@@ -67,8 +70,10 @@ public class BoardController {
 	 */
 //	@GetMapping("/board/list") //RequestMapping을 이용하여..
 	@GetMapping("list")
+//	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
 //	public void getList(Model model) {
-	public void getList(Model model, Criteria cri) {
+//	public void getList(Model model, Criteria cri, HttpSession session) { // 세션영역에 저장하게되면 또다시 지워줘야하잖아요
+	public void getList(Model model, Criteria cri, RedirectAttributes rttr) {
 		boardService.getListXml(cri, model);
 		// 리스트를 더이상 반환하지 않아도 됩니다.
 //		List<BoardVO> list = boardService.getListXml();
@@ -80,6 +85,20 @@ public class BoardController {
 //		model.addAttribute("list", boardService.getListXml());
 //		model.addAttribute("list", list);
 		
+		
+		
+		
+		/*
+		rttr.addFlashAttribute("pageNo", cri.getPageNo());
+		rttr.addFlashAttribute("searchField", cri.getSearchField());
+		rttr.addFlashAttribute("searchWord", cri.getSearchWord());
+		*/
+		
+		/*
+		session.setAttribute("pageNo", cri.getPageNo());
+		session.setAttribute("searchField", cri.getSearchField());
+		session.setAttribute("searchWord", cri.getSearchWord());
+		*/
 	}
 	
 	@GetMapping("view")

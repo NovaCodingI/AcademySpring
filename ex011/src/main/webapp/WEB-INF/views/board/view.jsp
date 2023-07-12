@@ -15,7 +15,13 @@
 
 	<link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/navbar-fixed/">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+	<!-- 스타일시트 -->
 	<link href="/resources/css/style.css" rel="stylesheet" >
+	
+	<!-- JS -->
+	<script src="/resources/js/reply.js"></script>
+	
 	<%-- 
 	<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 	--%>
@@ -31,10 +37,53 @@
 <%@ include file="../common/header.jsp" %>
 <script type="text/javascript">
 
+window.addEventListener('load', function(){
+// window.onload = function(){
+	// 수정페이지로 이동
+	btnEdit.addEventListener('click', function(){
+		
+		document.getElementById('pageNo').value = '${param.pageNo}';
+		document.getElementById('searchField').value = '${param.searchField}';
+		document.getElementById('searchWord').value = '${param.searchWord}';
+		    
+		viewForm.action='/board/edit';
+		viewForm.submit();
+	});
+	
+	// 삭제 처리 후 리스트 페이지로 이동
+	btnDelete.addEventListener('click', function(){
+//		onclick="location.href='/board/delete?bno=${board.bno}'"
+		// form method="get" name="viewForm" 에 bno가 있기때문에 적을 필요가 없음
+		viewForm.action='/board/delete';
+		viewForm.submit();
+	
+	});
+	
+	// 리스트 페이지로 이동
+	btnList.addEventListener('click', function(){
+//		/board/list?pageNo=${sessionScope.pageNo}&searchField=${sessionScope.searchField}&searchWord=${sessionScope.searchWord}
+		viewForm.action='/board/list';
+		viewForm.submit();
+	});
+	
+	// 답글 등록 버튼
+	btnReplyWrite.addEventListener('click', function(){
+		replyWrite();
+		
+	});
+	
+	// 댓글목록 조회 및 출력, reply.js 에 작성
+	getReplyList();
+	
+});
+
+/* 필요없어짐
 function requestAction(url){
 	viewForm.action=url;
 	viewForm.submit();
 }
+*/
+
 
 </script>
 <script>
@@ -55,10 +104,24 @@ function submitForm(action) {
     <a class="btn btn-lg btn-primary" href="/board/list" role="button">리스트 &raquo;</a>
    	href="/board/list?pageNo=${pageDto.cri.pageNo}&searchField=${pageDto.cri.searchField}&searchWord=${pageDto.cri.searchWord}"
     --%>
+    <%-- 첫페이지로 전환 
     <a class="btn btn-lg btn-primary" 
-   	href="/board/list?pageNo=${param.pageNo}&searchField=${param.searchField}&searchWord=${param.searchWord}"
+   	href="/board/list?pageNo=${empty param.pageNo ? 1 : param.pageNo}&searchField=${param.searchField}&searchWord=${param.searchWord}"
     	role="button">
     	리스트 &raquo;</a>
+   	--%>
+   	<!-- 세션을 사용하면 서버에 부하가 생길수 있으므로 많은 양의 세션데이터로 인해 서버에 메모리가 금방 차게됩니다. -->
+   	<%-- 버튼에 적용되어있는 이벤트들을 상단에 함수로 정의 해보기 
+    <a class="btn btn-lg btn-primary" 
+   	href="/board/list?pageNo=${sessionScope.pageNo}&searchField=${sessionScope.searchField}&searchWord=${sessionScope.searchWord}"
+   		role="button">
+   		리스트 &raquo;
+   	--%>
+    <a class="btn btn-lg btn-primary" 
+   	href="#" id="btnList"
+   		role="button">
+   		리스트 &raquo;
+</a>
   </div>
   <p></p>
   <!-- 상세보기 -->
@@ -73,10 +136,22 @@ function submitForm(action) {
 	<form method="post" action="/board/delete?bno=${board.bno}">
 	--%>
 	<form method="get" name="viewForm">
+	
+	<!-- 파라메터 포멧상단에 적용 -->
+	<%--
+	<input type="text" name="pageNo" id="pageNo" value="${sessionScope.pageNo }">
+	<input type="text" name="searchField" id="searchField" value="${sessionScope.searchField }">
+	<input type="text" name="searchWord" id="searchWord" value="${sessionScope.searchWord }">
+	 --%>
+	 
+	<input type="text" name="pageNo" id="pageNo" value="${param.pageNo }">
+	<input type="text" name="searchField" id="searchField" value="${param.searchField }">
+	<input type="text" name="searchWord" id="searchWord" value="${param.searchWord }">
+	
 	<%-- 
 	<form id="editForm" method="post" action="/board/edit">
 	--%>
-	<input type="hidden" name="bno" id="bno" value="${board.bno }">
+	<input type="text" name="bno" id="bno" value="${board.bno }">
 	<div class="mb-3">
 	  <label for="title" class="form-label">제목</label>
 	  <input name="title" id="title" type="text" readonly class="form-control" value='${board.title}' >
@@ -91,8 +166,14 @@ function submitForm(action) {
 	</div>
 	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+		<%-- 버튼으로 변경 후 id 줍시다. 추가로 상단에  onclick 정의 
 		<button type="submit" class="btn btn-primary btn-lg" onclick="requestAction('/board/edit')">수정</button>
-		<button type="button" class="btn btn-primary btn-lg" onclick="location.href='/board/delete?bno=${board.bno}'">삭제</button>
+		--%>
+		<button type="button" id="btnEdit" class="btn btn-primary btn-lg">수정</button>
+		<%-- 상단에 onclick 정의
+		<button type="button" id="btnDelete" class="btn btn-primary btn-lg" onclick="location.href='/board/delete?bno=${board.bno}'">삭제</button>
+		--%>
+		<button type="button" id="btnDelete" class="btn btn-primary btn-lg">삭제</button>
 	<%-- 
 		<!-- 함수를 이용해도 되고 location.href를 이용해도 되고 근데 location으로 하니까 반환이 안되네? 
 			대신 type을 button으로 해야됩니다. 돌아온다음 리다이렉트가 되어야하는데 submit으로 하면 삭제되고 리스트가 넘어가요 -->
@@ -104,8 +185,20 @@ function submitForm(action) {
 	</form>
 
   </div>
+  <p></p>
+  <input type ="text" id="replyer" value="작성자">
+  <div class="input-group">
+	  <span class="input-group-text">답글작성</span>
+	  <input type="text" name="page" id="page" value="1">
+	  <input type="text" aria-label="First name" class="form-control" id="reply">
+	  <input type="button" id="btnReplyWrite" aria-label="Last name" class="input-group-text" value="등록하기">
+  </div>
   
+  <!-- 댓글 리스트 -->
+  <div id="replyDiv"></div>
+  <%--
   <%@include file="../reply/test.jsp" %>
+  --%>
 </main>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

@@ -57,6 +57,12 @@ public class BoardServiceImpl implements BoardService{
 		model.addAttribute("totalCnt");
 		model.addAttribute("pageDto", pageDto);
 		
+		
+		
+		
+		
+		
+		
 		// 서비스가 다 처리해서 반환할 필요가 없음
 		return null;
 //		return boardMapper.getListXml(cri);
