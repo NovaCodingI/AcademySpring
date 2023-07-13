@@ -1,17 +1,20 @@
 package com.ikik.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import com.ikik.dao.MemberDao;
-import com.ikik.vo.Member;
+import com.ikik.vo.MemberVO;
 
 @Service
-public class MemberService {
+public interface MemberService {
 	
-	@Autowired
-	MemberDao dao;
+	public MemberVO login(MemberVO memberVO);
+	
+// public class MemberService {
+	
+	// @Autowired
+	// MemberDao dao;
+	
+	/*
 	public Member login(Member paramMember, Model model) {
 		Member member = dao.login(paramMember);
 		if(member == null) {
@@ -21,4 +24,5 @@ public class MemberService {
 		}
 		return member;
 	}
+	*/
 }

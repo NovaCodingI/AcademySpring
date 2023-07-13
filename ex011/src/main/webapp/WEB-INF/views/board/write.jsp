@@ -36,13 +36,22 @@
 		viewForm.action = url;
 		viewForm.submit();
 	}
+	
+	window.addEventListener('load', function(){
+		btnList.addEventListener('click', function(){
+			viewForm.action='/board/list';
+			viewForm.method="get";
+			viewForm.submit();
+		});
+	});
+	
 </script>
 
 <main class="container">
   <div class="bg-light p-5 rounded">
     <h1>글쓰기 페이지</h1>
     <p class="lead">부트스트랩을 이용한 게시판 만들기</p>
-    <a class="btn btn-lg btn-primary" href="/board/list" role="button">리스트 &raquo;</a>
+    <a class="btn btn-lg btn-primary" href="#" id="btnList" role="button">리스트 &raquo;</a>
   </div>
   <p></p>
   <!-- 글쓰기 -->
@@ -50,6 +59,13 @@
 <!-- 사용자를 입력을 입력받는(글쓰기) 같은 경우에는 post방식을 -->
 <!-- list나 상세화면, 페이지를 요청할때는 get방식 -->
 	<form method="post" name="viewForm" action="/board/write">
+	
+	<!-- 페이지, 검색유지 -->
+	<!-- 쿼리스트링에 name은 value, name값을 잘 맞추어서 작성해주어야합니다. -->
+	<input type="text" name="pageNo" id="pageNo" value="${param.pageNo }">
+	<input type="text" name="searchField" id="searchField" value="${param.searchField }">
+	<input type="text" name="searchWord" id="searchWord" value="${param.searchWord }">
+	
 	<div class="mb-3">
 	  <label for="title" class="form-label">제목</label>
 	  <input name="title" id="title" type="text" class="form-control" value="${board.title}">

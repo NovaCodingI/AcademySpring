@@ -42,9 +42,9 @@ window.addEventListener('load', function(){
 	// 수정페이지로 이동
 	btnEdit.addEventListener('click', function(){
 		
-		document.getElementById('pageNo').value = '${param.pageNo}';
-		document.getElementById('searchField').value = '${param.searchField}';
-		document.getElementById('searchWord').value = '${param.searchWord}';
+//		document.getElementById('pageNo').value = '${param.pageNo}';
+//		document.getElementById('searchField').value = '${param.searchField}';
+//		document.getElementById('searchWord').value = '${param.searchWord}';
 		    
 		viewForm.action='/board/edit';
 		viewForm.submit();

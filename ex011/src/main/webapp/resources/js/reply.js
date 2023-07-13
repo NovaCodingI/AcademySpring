@@ -42,7 +42,22 @@ console.log('reply.js======');
 	
 
 	// 댓글 조회 및 출력
-	function getReplyList(){
+//	function getReplyList(){
+	function getReplyList(page){
+		
+		/**
+		 * falsey : false, 0, "", NaN, undefiend, null 값들은 false를 반환합니다.
+		 * 
+		 * falsey한 값 이외의 값이 들어 있으면 true를 반환
+		 * 
+		 * page에 입력된 값이 없으면 1을 세팅
+		 */
+		if(!page){
+			page = 1;
+			
+		}
+		
+		
 		let bno = document.querySelector("#bno").value;
 		// 0으로 만들고 test
 //		let bno = 0;
@@ -51,7 +66,7 @@ console.log('reply.js======');
 	    at getReplyList (reply.js:49:44)
 	    at view?bno=119&pageNo=1&searchField=title&searchWord=:165:2
 	    */ 
-		let page = '1';
+//		let page = '1'; //선언되지 않고 파라메터로
 		console.log('bno : ', bno);
 		console.log('/reply/list/' + bno + '/' + page);
 		// `` 백킷 사용
@@ -143,29 +158,36 @@ console.log('reply.js======');
 			
 			// 페이지 블럭 생성
 			let pageBlock = 
-				
+				// ul 목록태그 안에 li 버튼들, 블럭마다 하나하나씩 끊어주는것, ; 마침표 후 다시 페이지블럭에 담아주는것
 					  `	<nav aria-label="...">                                              `
 					+ `	  <ul class="pagination justify-content-end">                       `;
-			
+			// prev 버튼
 			if(pageDto.prev){
 				pageBlock +=
-				  `	    <li class="page-item" onclick="getPage(${pageDto.startNo-1})">  `
+//				  `	    <li class="page-item disabled" onclick="getPage(${pageDto.startNo-1})">  `
+				  `	    <li class="page-item disabled" onclick="getReplyList(${pageDto.startNo-1})">  `
 				+ `	      <a class="page-link">Previous</a>                             `
 				+ `	    </li>                                                           `;
 			}
 			
-			for(i=pageDto.startNo;i<=pageDto.endNo;i++){
-				let activeStr = (pageDto.cri.pageNo == i) ? 'active' : '';
-			
+			// 페이지 버튼 startNo ~ endNo
+			//for(i=pageDto.startNo;i<=pageDto.endNo;i++){
+				// let activeStr = (pageDto.cri.pageNo == i) ? 'active' : '';
+			for(let i=pageDto.startNo;i<=pageDto.endNo;i++){
+				let active = pageDto.cri.pageNo == i ? 'active' : '';
 				pageBlock +=
-					  `	    <li class="page-item ${activeStr}" onclick="getPage(${i})">  `
+//					  `	    <li class="page-item ${activeStr}" onclick="getPage(${i})">  `
+//					`	    <li class="page-item " onclick="getPage(${i})">  `
+					`	    <li class="page-item ${active}" onclick="getReplyList(${i})">  `
 					+ `	      <a class="page-link" href="#">${i}</a>                           `
 					+ `	    </li>                                                           `;
 			}
-					
+			
+			// next 버튼
 			if(pageDto.next){		
 				pageBlock +=	
-					  `	    <li class="page-item" onclick="getPage(${pageDto.endNo+1})">                                          `
+//					  `	    <li class="page-item" onclick="getPage(${pageDto.endNo+1})">                                          `
+					`	    <li class="page-item" onclick="getReplyList(${pageDto.endNo+1})">                                          `
 					+ `	      <a class="page-link" href="#">Next</a>                        `
 					+ `	    </li>      `;
 			}	

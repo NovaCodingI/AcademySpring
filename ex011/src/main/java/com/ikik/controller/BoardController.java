@@ -1,16 +1,11 @@
 package com.ikik.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ikik.service.BoardService;
@@ -222,10 +217,24 @@ public class BoardController {
 	}
 	
 	@PostMapping("editAction")
+//	public String editAction(BoardVO board, Criteria cri, RedirectAttributes rttr, Model model) {
 	public String editAction(BoardVO board
+							, Criteria cri
 							, RedirectAttributes rttr
 							, Model model) {
 
+		// 파라메터에 담았는지
+		// ?pageNo=1 → getParemeter로 받는것
+		// request.getParameter("pageNo");
+		// → ${param.pageNo}
+		
+		// 내장객체에 담았는지
+		// request.setAttribute("") request.내장객체에 있는 함수?에 담았었어요 
+		// → request.getAttribute("")
+		
+		// session.setAttr("")
+		// → ${pageNo}
+		
 		// 수정
 		int res = boardService.update(board);
 		
@@ -233,12 +242,21 @@ public class BoardController {
 			// addAttribute(파라메터 영역에 저장됩니다)
 //			model.addAttribute("msg", "수정 되었습니다.");
 			
-			// 세션영역에 저장
+			// 세션영역에 저장 (잠깐있다가 사라짐)
 			rttr.addFlashAttribute("msg", "수정되었습니다.");
+			// 출력시 {msg} 
 			// 상세페이지로 이동
 			// 다른 url를 호출하고싶은거에요 redirect해줘야죠 근데 메세지가 안떠 리퀘스트영역이 공유가 안되어있어서
 			// RedirectAttributes rttr 객체를 이용해서 사용합니다.
 			// Redirect 할때는 model에다 넣어도 소용이 없습니다. (request 영역이 공유 되지 않으므로)
+			
+			// ?~~ 쿼리스트링으로 넘어갑니다. 주소표시줄에 블라블라, 파라메터로 넘어갑니다.
+			// rttr.addAttribute(attributeValue);
+			rttr.addAttribute("pageNo", cri.getPageNo());
+			rttr.addAttribute("searchField", cri.getSearchField());
+			rttr.addAttribute("searchWord", cri.getSearchWord());
+			
+			// redirect 는 화면에다가 다시 웹브라우저에 url 정보를 넘기는것(알려주는것)
 			return "redirect:/board/view?bno=" + board.getBno();
 		} else {
 			model.addAttribute("msg", "수정중 예외사항이 발생 하였습니다.");

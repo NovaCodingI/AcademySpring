@@ -26,6 +26,8 @@ public class ReplyMapperTest {
 	@Autowired
 	ReplyMapper mapper;
 	
+	
+	
 	@Test
 	public void test() {
 		assertNotNull(mapper);
