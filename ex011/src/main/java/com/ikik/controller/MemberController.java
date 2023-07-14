@@ -26,6 +26,12 @@ public class MemberController extends CommonRestController{
 		return "login";
 	}
 	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "login";
+	}
+	
 	/**
 	 * JSON 형식의 데이터를 주고 받고 싶어요
 	 * 페이지를 갱신하지 않고 원하는 데이터만 요청
@@ -48,9 +54,42 @@ public class MemberController extends CommonRestController{
 			session.setAttribute("member", memberVO);
 			session.setAttribute("userId", memberVO.getId());
 			
-			return responseMap(1, "로그인");
+			// return responseMap(1, "로그인");
+			return responseMapMessage(REST_SUCCESS, "로그인 되었습니다.");
 		} else {
-			return responseMap(0, "로그인");
+			// return responseMap(0, "로그인");
+			return responseMapMessage(REST_FAIL, "아이디와 비밀번호를 확인해주세요.");
+		}
+	}
+	
+	@PostMapping("/idCheck")
+	// 넘겨줄때도 JSON 문자열로 반환 할겁니다.
+	public @ResponseBody Map<String, Object> idCheck(@RequestBody MemberVO memberVO){
+		
+		int res = service.idCheck(memberVO);
+		
+		// idCheck 와 같은 경우는 거꾸로 돌아간다
+		// count = 1 로그인실패,
+		// insert, update, delete > 0  true
+		
+		// decode(count(*),0,1,0), 0 이면 메세지 나오도록 수정함
+		if(res == 0) {
+			return responseMapMessage( REST_SUCCESS , "사용가능한 아이디 입니다.");
+		} else {
+			return responseMapMessage( REST_FAIL , "이미 사용중인 아이디 입니다.");
+		}
+		
+	}
+	
+	@PostMapping("/register")
+	public @ResponseBody Map<String, Object> register(@RequestBody MemberVO memberVO){
+		
+		try {
+			int res = service.signUp(memberVO);
+			return responseWriteMap(res);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseMapMessage(REST_FAIL, "등록중 예외사항이 발생 하였습니다.");
 		}
 	}
 	

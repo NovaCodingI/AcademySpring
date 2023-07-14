@@ -9,6 +9,10 @@ public interface MemberService {
 	
 	public MemberVO login(MemberVO memberVO);
 	
+	public int signUp(MemberVO memberVO);
+	
+	public int idCheck(MemberVO memberVO);
+	
 // public class MemberService {
 	
 	// @Autowired

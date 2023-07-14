@@ -19,6 +19,8 @@ public class CommonRestController {
 	private final String REST_EDIT = "수정";
 	private final String REST_DELETE = "삭제";
 	private final String REST_SELECT = "조회";
+	protected final String REST_SUCCESS = "success";
+	protected final String REST_FAIL = "fail";
 	
 	// 상단에 상수가 정해져있고 메서드에 이름을
 	// 사용자에게는 다른 이름을 
@@ -32,11 +34,11 @@ public class CommonRestController {
 	public Map<String, Object> responseMap(int res, String msg) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if(res>0) {
-			map.put("result", "success");
+		if(res > 0) {
+			map.put("result", REST_SUCCESS);
 			map.put("msg", msg + "되었습니다.");
 		} else {
-			map.put("result", "fail");
+			map.put("fail", REST_FAIL);
 			map.put("msg", msg + "중 예외가 발생하였습니다.");
 		}
 		
@@ -72,5 +74,15 @@ public class CommonRestController {
 		map.put("pageDto", pageDto);
 		return map;
 	}
+	
+	public Map<String, Object> responseMapMessage(String result, String msg) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+			map.put("result", result);
+			map.put("msg", msg);
+		
+		return map;
+	}
+
 
 }

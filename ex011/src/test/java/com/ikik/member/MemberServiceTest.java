@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ikik.mapper.MemberMapper;
+import com.ikik.service.MemberService;
 import com.ikik.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;
@@ -17,10 +17,10 @@ import lombok.extern.log4j.Log4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class MemberTest {
+public class MemberServiceTest {
 	
 	@Autowired
-	MemberMapper memberMapper;
+	MemberService memberService;
 	
 	@Test
 	public void test() {
@@ -29,7 +29,7 @@ public class MemberTest {
 		member.setId("admin");
 		member.setPw("1234");
 		
-		member = memberMapper.login(member);
+		member = memberService.login(member);
 		
 		log.info(member);
 		assertNotNull(member);
@@ -39,11 +39,11 @@ public class MemberTest {
 	public void signUpTest() {
 		
 		MemberVO member = new MemberVO();
-		member.setId("heyhey");
+		member.setId("huhu");
 		member.setPw("1234");
-		member.setName("히히덕덕");
+		member.setName("헉헉");
 		
-		int res = memberMapper.signUp(member);
+		int res = memberService.signUp(member);
 		
 		log.info(member);
 		assertNotNull(member);
@@ -58,12 +58,14 @@ public class MemberTest {
 		MemberVO member = new MemberVO();
 		member.setId("heyhey");
 		
-		int res = memberMapper.idCheck(member);
+		int res = memberService.idCheck(member);
 		
 		log.info(member);
 		assertNotNull(member);
 		
 		assertEquals(1, res);
+		
+		System.out.println("결과" + res);
 		
 	}
 

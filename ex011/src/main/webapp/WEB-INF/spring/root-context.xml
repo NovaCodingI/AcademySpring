@@ -55,6 +55,9 @@
 	    <property name="maxInMemorySize" value="10485756"></property>
 	</bean>
 	
+	<!-- 암호화 작성 -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+	
 
 	
 </beans>
