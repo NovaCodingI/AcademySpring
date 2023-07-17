@@ -186,7 +186,8 @@
 		console.log(map);
 		if(map.result == 'success'){
 			// 로그인 성공 → list 로 이동
-			location.href="board/list";
+//			location.href="board/list";
+			location.href=map.url;
 		} else{
 			// 실패 → 메세지 처리
 			msg.innerHTML = map.msg;

@@ -1,5 +1,7 @@
 package com.ikik.board;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -28,5 +30,11 @@ public class BoardServiceTest {
 		list.forEach(board -> {
 			log.info(board);
 		});
+	}
+	
+	@Test
+	public void updateReplyCntTest() {
+		int res = boardService.updateReplyCnt(72, 1);
+		assertEquals(1, res);
 	}
 }

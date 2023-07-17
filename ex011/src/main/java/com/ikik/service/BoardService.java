@@ -2,6 +2,7 @@ package com.ikik.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -26,4 +27,7 @@ public interface BoardService {
 	public int update(BoardVO board);
 	
 	public int getTotalCnt(Criteria cri);
+	
+	public int updateReplyCnt(@Param("bno")int bno, @Param("amount")int amount);
+	
 }

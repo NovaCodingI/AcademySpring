@@ -29,4 +29,7 @@ public interface ReplyMapper {
 	public int delete(int rno);
 	
 	public int totalCnt(int bno);
+	
+	public ReplyVO getOne(int rno);
+	
 }

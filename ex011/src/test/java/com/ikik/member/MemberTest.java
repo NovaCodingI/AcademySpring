@@ -3,6 +3,8 @@ package com.ikik.member;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,12 @@ public class MemberTest {
 		
 		assertEquals(1, res);
 		
+	}
+	
+	@Test
+	public void testGetMemberRole() {
+		List<String> list = memberMapper.getMemberRole("admin");
+		System.out.println("===========================관리자권한 : " + list.contains("ADMIN_ROLE"));
 	}
 
 }

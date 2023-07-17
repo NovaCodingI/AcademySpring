@@ -128,6 +128,15 @@ public class BoardTest {
 		
 	}
 	
+	@Test
+	public void updateReplyCntTest() {
+		
+		int res = boardMapper.updateReplyCnt(72, 1);
+		
+		assertEquals(1, res);
+		
+	}
+	
 	
 	
 	

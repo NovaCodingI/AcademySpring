@@ -2,6 +2,7 @@ package com.ikik.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.ikik.vo.BoardVO;
@@ -31,5 +32,13 @@ public interface BoardMapper {
 	public int update(BoardVO board);
 	
 	public int getTotalCnt(Criteria cri);
+	
+	/**
+	 * 파라메터가 2개 이상인 경우 Param어노테이션을 꼭 달아 주어야 합니다.
+	 * @param bno
+	 * @param amount
+	 * @return
+	 */
+	public int updateReplyCnt(@Param("bno")int bno, @Param("amount")int amount);
 	
 }

@@ -51,11 +51,22 @@ public class MemberController extends CommonRestController{
 		memberVO = service.login(memberVO);
 		
 		if(memberVO != null) {
-			session.setAttribute("member", memberVO);
+			session.setAttribute("memberVO", memberVO);
 			session.setAttribute("userId", memberVO.getId());
+			Map<String, Object> map = responseMapMessage(REST_SUCCESS, "로그인 되었습니다.");
+			
+			if(memberVO.getRole() != null
+					&& memberVO.getRole().contains("ADMIN_ROLE")) {
+				// 관리자 로그인 → 관리자 페이지로 이동
+				map.put("url", "/admin");
+			} else {
+				map.put("url", "/board/list");
+			}
+			
 			
 			// return responseMap(1, "로그인");
-			return responseMapMessage(REST_SUCCESS, "로그인 되었습니다.");
+			// return responseMapMessage(REST_SUCCESS, "로그인 되었습니다.");		// 리턴을 map으로 받아줍시다.
+			return map;
 		} else {
 			// return responseMap(0, "로그인");
 			return responseMapMessage(REST_FAIL, "아이디와 비밀번호를 확인해주세요.");

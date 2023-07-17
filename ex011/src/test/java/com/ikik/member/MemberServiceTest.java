@@ -39,9 +39,9 @@ public class MemberServiceTest {
 	public void signUpTest() {
 		
 		MemberVO member = new MemberVO();
-		member.setId("huhu");
+		member.setId("admin");
 		member.setPw("1234");
-		member.setName("헉헉");
+		member.setName("admin");
 		
 		int res = memberService.signUp(member);
 		

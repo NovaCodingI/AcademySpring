@@ -3,6 +3,7 @@ package com.ikik.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,10 @@ public class BoardController {
 //	public void getList(Model model, Criteria cri, HttpSession session) { // 세션영역에 저장하게되면 또다시 지워줘야하잖아요
 	public void getList(Model model, Criteria cri, RedirectAttributes rttr) {
 		boardService.getListXml(cri, model);
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		
 		// 리스트를 더이상 반환하지 않아도 됩니다.
 //		List<BoardVO> list = boardService.getListXml();
 //		List<BoardVO> list = boardService.getListXml(cri, model);
@@ -80,7 +85,8 @@ public class BoardController {
 //		model.addAttribute("list", boardService.getListXml());
 //		model.addAttribute("list", list);
 		
-		
+		stopWatch.stop();
+		log.info("수행시간 : " + stopWatch.getTotalTimeMillis() + "(ms)초");
 		
 		
 		/*

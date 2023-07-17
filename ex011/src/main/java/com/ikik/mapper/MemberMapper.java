@@ -1,5 +1,7 @@
 package com.ikik.mapper;
 
+import java.util.List;
+
 import com.ikik.vo.MemberVO;
 
 
@@ -11,4 +13,5 @@ public interface MemberMapper {
 	
 	public int idCheck(MemberVO memberVO);
 	
+	public List<String> getMemberRole(String id);
 }

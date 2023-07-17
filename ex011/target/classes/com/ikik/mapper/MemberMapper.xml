@@ -35,4 +35,10 @@
 			where id=#{id}
 	</select>
 	
+	<!-- 권한조회 -->
+	<select id="getMemberRole" resultType="String">
+		select role_id from memberrole where id=#{id}
+	</select>
+	
+	
 </mapper>
