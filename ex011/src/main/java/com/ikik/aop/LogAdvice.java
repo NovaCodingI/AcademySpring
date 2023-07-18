@@ -61,12 +61,12 @@ public class LogAdvice {
 	 * 		타겟 객체의 메서드가 실행되기 전에 호출되는 어드바이스
 	 * 		JoinPoint를 통해 파라미터 정보 참조 가능
 	 */
-	@Before("execution(* com.ikik.service.Board*.*(..))")
-	public void logBefore() {
-		log.info("============================");
-		log.info("============================ 안뜨는거 맞나? Yo");
-		log.info("============================");
-	}
+//	@Before("execution(* com.ikik.service.Board*.*(..))")
+//	public void logBefore() {
+//		log.info("============================");
+//		log.info("============================ 안뜨는거 맞나? Yo");
+//		log.info("============================");
+//	}
 	
 	/**
 	 * joinPoint
@@ -90,37 +90,42 @@ public class LogAdvice {
 	 * 		
 	 * 		주업무로직을 실행하기 위해 JoinPoint의 하위 클래스인
 	 * 		ProceedingJoinPoint타입의 파라메터를 필수적으로 선언해야함
+	 * 		ProceedingJoinPoint를 이용해 타겟메서드를 실행하고 결과를 반환 합니다.
+	 * 		타겟 메서드의 실행결과를 반환 하기 위해서!!
+	 * 
+	 * 		(타켓을 감싸고 실행된다)
 	 * 
 	 * @param pjp
 	 * @return
 	 */
-	@Around("execution(* com.ikik.service.Board*.*(..))")
-	public Object logTime(ProceedingJoinPoint pjp) {
-		
-		StopWatch stopWatch	= new StopWatch();
-		stopWatch.start();
-		
-		Object res = "";
-		// 주 업무로직 실행(타겟 메서드의 실행시점을 정할 수 있다)
-		try {
-			res = pjp.proceed();
-			// res 값이 없으면 오류가 발생해요
-//			pjp.proceed(); 
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		
-		stopWatch.stop();
-		log.info("===========================");
-		log.info("===========================");
-		log.info(
-				pjp.getTarget().getClass().getName() +"."+ pjp.getSignature().getName()
-				+ " 수행시간 : " + stopWatch.getTotalTimeMillis() + "(ms)초-");
-		log.info("===========================");
-		log.info("===========================");
-		
-		return res;
-	}
+//	//  ★감싸고 처리하다보니 타겟을 직접 실행해야됩니다 → ProceedingJoinPoint !! : 타겟메서드 실행하는 역할
+//	@Around("execution(* com.ikik.service.Board*.*(..))")
+//	public Object logTime(ProceedingJoinPoint pjp) {
+//		
+//		StopWatch stopWatch	= new StopWatch();
+//		stopWatch.start();
+//		// 컨트롤러가 원하는 값을 담아서 !! 반환 해줘야합니다
+//		Object res = "";
+//		// 주 업무로직 실행(타겟 메서드의 실행시점을 정할 수 있다)
+//		try {
+//			res = pjp.proceed();
+//			// res 값이 없으면 오류가 발생해요
+////			pjp.proceed(); 
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		
+//		stopWatch.stop();
+//		log.info("===========================");
+//		log.info("===========================");
+//		log.info(
+//				pjp.getTarget().getClass().getName() +"."+ pjp.getSignature().getName()
+//				+ " 수행시간 : " + stopWatch.getTotalTimeMillis() + "(ms)초-");
+//		log.info("===========================");
+//		log.info("===========================");
+//		
+//		return res;
+//	}
 	
 	@Autowired
 	LogService logService;

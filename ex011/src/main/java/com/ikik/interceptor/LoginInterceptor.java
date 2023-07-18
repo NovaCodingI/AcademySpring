@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Spring Interceptor
@@ -31,6 +32,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 	 * 			 true : 요청컨트롤러 실행
 	 * 			 false : 요청컨트롤러 실행 하지 않음
 	 */
+	// 구현체 이다보니 HandlerInterceptor 가 가지고있는 객체를 오버라이드해서 사용
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -41,10 +43,20 @@ public class LoginInterceptor implements HandlerInterceptor{
 				&& !session.getAttribute("userId").equals("")) {
 			return true;
 		} else {
+			// 인터셉터에서는 한글처리를 자동으로 해주지 않기때문에 Encoding 해줘야 합니다.
 			String msg = URLEncoder.encode("로그인 후 사용가능한 메뉴 입니다.", "UTF-8");
 			response.sendRedirect("/login?msg="+msg);
 			return false;
 		}
 	}
+	
+	/* 오버라이드해서 재정의
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		// TODO Auto-generated method stub
+		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+	}
+	*/
 
 }

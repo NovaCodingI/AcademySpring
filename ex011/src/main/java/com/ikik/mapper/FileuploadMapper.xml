@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ikik.mapper.FileuploadMapper">
+<!-- ${uuid} $로하면 , 안들어 갑니다 #으로 해주셔야해요, VO에 선언된 변수이름 일치시켜주세요 안그러면 오류나요 -->
+	<insert id="insert">
+		insert into tbl_attach
+				values(#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{bno})
+	</insert>
+	
+	<select id="getList" resultType="com.ikik.vo.FileuploadVO">
+		select t.*
+		        , uploadpath||uuid||'_'||filename savePath
+        		, decode(filetype, 'I'
+                			,'s_'||uploadpath||uuid||'_'||filename
+                			,'') s_savePath 
+		  from tbl_attach t
+		 where bno=#{bno}
+	</select>
+	
+	<select id="getListx" resultType="com.ikik.vo.FileuploadVO">
+		select *
+		 from tbl_attach
+		where bno=#{bno}
+	</select>
+	
+	<select id="getListxx" resultType="com.ikik.vo.FileuploadVO">
+		select t.*
+	        , uploadpath||uuid||'_'||fileName savePath
+	        , 's_'||uploadpath||uuid||'_'||fileName s_savePath
+			 from tbl_attach t
+			where bno=#{bno}
+	</select>
+	
+</mapper>

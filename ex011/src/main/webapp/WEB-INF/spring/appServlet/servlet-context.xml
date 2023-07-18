@@ -23,12 +23,13 @@
 	
 	<context:component-scan base-package="com.ikik.controller" />
 	<context:component-scan base-package="com.ikik.interceptor" />
+	
 	<interceptors>
 		<!-- 로그인 체크 -->
 		<interceptor>
 			<!-- board로 들어오는 모든 요청에 대해서 -->
 			<mapping path="/board/*"/>
-			<!-- 제외할 URL -->
+			<!-- 제외할 경로 URL -->
 			<exclude-mapping path=""/>
 			<beans:ref bean="loginInterceptor"/>
 		</interceptor>

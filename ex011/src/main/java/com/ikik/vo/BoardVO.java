@@ -1,5 +1,8 @@
 package com.ikik.vo;
 
+import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -11,8 +14,11 @@ public class BoardVO {
 	private String title;
 	private String content;
 	private String writer;
-	private String regdate;
-	private String updateDate;
+	private Date regdate;
+	private Date updateDate;
 
+	private int replyCnt;
+	
+	private List<FileuploadVO> attachList;
 	
 }
