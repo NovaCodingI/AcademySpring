@@ -79,7 +79,10 @@
 	  <label for="writer" class="form-label">작성자</label>
 	  <input type="text" class="form-control" id="writer" name="writer" value="${board.writer}">
 	</div>
-	
+	<div class="mb-3">
+	  <label for="writer" class="form-label">첨부파일</label>
+	  <input class="form-control" type="file" id="files" name="files">
+	</div>
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center">
 		<!-- bno 값이 있으면 수정하기 res로 변수이름 담아주기 -->
 		<c:if test="${not empty board.bno }" var="res">

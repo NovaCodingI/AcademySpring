@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://kit.fontawesome.com/7d9e0e4039.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	
 	window.addEventListener('load', function(){
@@ -35,7 +36,7 @@
 					let fileName = pair[1].name;
 					let fileSize = pair[1].fileSize;
 					// 파일 확장자, 크기 체크
-					// 서버에 전송 가능한 형식인지 확인
+					// 서버에 전송 가능한 형식인지 확인 (정규식체크)
 					// 최대 전송가능한 용량을 초과 하지 않는지
 					
 //					console.log("fileName : ",[pair[1].name]);
@@ -63,7 +64,6 @@
 //					console.log('map : ' + map);
 //				});
 		});
-		
 	})
 	
 	function checkExtension(fileName, fileSize){
@@ -90,9 +90,11 @@
 	function fileuploadRes(map){
 			if(map.result=='success'){
 				divFileuploadRes.innerHTML = map.msg;
+				// 게시글등록
+			} else {
+				alert(map.msg);
 			}
 		}
-		
 
 	function getFileList(){
 		// /file/list/{bno}
@@ -108,14 +110,58 @@
 		let content = '';
 		if(map.list.length > 0){
 			map.list.forEach(function(item, index){
+				let savePath = encodeURIComponent(item.savePath)	
+				console.log(item.savePath);				
 //				content += item.fileName + "/" + item.savePath + '<br>';
-				content += item.fileName + '<br>';
+				content += ""
+						+ "<a href='/file/download?fileName="
+						+ savePath+"'>"
+//						+ encodeURIComponent(item.savePath) + '">'
+//						+ item.savePath + '">' 요청 타겟에서 유효하지 않은 문자가 발견되었습니다. 유효한 문자들은 RFC 7230과 RFC 3986에 정의되어 있습니다. 400 에러
+						+ item.fileName + '</a>'
+						+ '<i onclick="attachFileDelete(this)"'
+						+ ' data-bno="'+item.bno+'" data-uuid="'+item.uuid+'"'
+						+ ' class="fa-solid fa-trash-arrow-up"></i>'
+						+ '<br>';
 			})
 		} else {
 			content = '등록된 파일이 없습니다.';
 		}
 		divFileupload.innerHTML = content;
 	}
+	
+	function attachFileDelete(e){
+		let bno = e.dataset.bno;
+		let uuid = e.dataset.uuid;
+		// 값이 유효하지 않은 없는 경우 메세지 처리
+		// fetch 요청
+		fetch(`/file/delete/\${uuid}/\${bno}`)
+		// \${ } el 표현식 → \${}, jsp에서 el표현식은 null, undefiend 값, 주석처리하여 \${ }(el 표현식으로 처리 하지 않음)
+//		fetch('/file/delete/' + uuid + '/' + bno)
+	    .then(response => response.json())
+	    // 오브젝트에 map은 이름준겁니다.  response.json() → map → replyWriteRes(map)
+		.then(map => fileDeleteRes(map));
+		
+	
+		(e.dataset.aaa)?'true':'false';
+		console.log(e.dataset.bno
+					, e.dataset.uuid
+					, e.dataset.aaa);
+		console.log(e);
+	}
+	
+	// 삭제 결과 처리
+	function fileDeleteRes(map){
+		if(map.result == 'success'){
+			console.log(map.msg);
+			// 리스트 조회
+			getFileList();
+		} else {
+			alert(map.msg);
+		}
+	}
+	
+
 	
 </script>
 </head>
@@ -130,10 +176,14 @@
 		--%>
 		bno : <input type="text" id="bno" name ="bno" value="30">
 		<br>
-		<input type="file" name="files" multiple="multiple"> <br>
-		<input type="file" name="files"> <br>
-		<input type="file" name="files"> <br>
 		
+		<input type="file" name="files" multiple="multiple"> <br>
+		<br>
+		<%--
+		<input type="file" name="files"> <br>
+		<input type="file" name="files"> <br>
+		--%>
+		 
 		<button type="submit">파일업로드</button>
 		<button type="button" id="btnFileupload">Fetch 파일업로드</button>
 		<br>

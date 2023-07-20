@@ -13,4 +13,7 @@ public interface FileuploadService {
 	
 	int insert(FileuploadVO vo);
 	
+//	int delete(FileuploadVO vo);
+	
+	int delete(int bno, String uuid);
 }

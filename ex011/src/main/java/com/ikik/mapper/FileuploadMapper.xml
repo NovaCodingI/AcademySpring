@@ -20,6 +20,14 @@
 		 where bno=#{bno}
 	</select>
 	
+	<delete id="delete">
+		delete tbl_attach
+			where bno = #{bno} 
+			and uuid = #{uuid}
+	</delete>
+	
+	
+	
 	<select id="getListx" resultType="com.ikik.vo.FileuploadVO">
 		select *
 		 from tbl_attach
