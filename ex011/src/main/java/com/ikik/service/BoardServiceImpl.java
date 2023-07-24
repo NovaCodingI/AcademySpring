@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ikik.mapper.BoardMapper;
+import com.ikik.mapper.ReplyMapper;
 import com.ikik.vo.BoardVO;
 import com.ikik.vo.Criteria;
+import com.ikik.vo.FileuploadVO;
 import com.ikik.vo.PageDto;
 
 /**
@@ -40,6 +44,13 @@ public class BoardServiceImpl implements BoardService{
 
 	@Autowired
 	private BoardMapper boardMapper;
+	
+	@Autowired
+	private FileuploadService fileuploadService;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
+	
 	
 	@Override
 	public List<BoardVO> getListXml(Criteria cri, Model model) {
@@ -74,11 +85,13 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.insert(board);
 	}
 
+	/* 파일첨부도 추가해서 주석처리
 	@Override
 	public int insertSelectKey(BoardVO board) {
 		
 		return boardMapper.insertSelectKey(board);
 	}
+	*/
 
 	@Override
 	public BoardVO getOne(int bno) {
@@ -87,16 +100,33 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int delete(int bno) {
+		// 게시물을 삭제시 첨부된 파일이 있는 경우 오류가 발생
+		// → 게시물 삭제시 댓글 및 첨부파일이 모두 삭제 된다는 알림을 띄우고
+		// 확인 버튼을 클릭하면 모두 삭제 처리
 		
+		// 1. 첨부파일을 모두 삭제
+		// 첨부파일 리스트 조회 - fileuploadService
+		List<FileuploadVO> list = fileuploadService.getList(bno);
+		int res = 0;
+		for(FileuploadVO vo : list) {
+			// 리스트를 반복을 통해서 돌면서 삭제 처리 - List는 없지만 삭제처리가 있음
+			// 삭제처리 - fileuploadService
+			res += fileuploadService.delete(bno, vo.getUuid());
+		}
+		// 2. 댓글 삭제
+		replyMapper.deleteReplyList(bno);
+		
+		// 3. 게시글 삭제
 		return boardMapper.delete(bno);
 	}
 
-	@Override
-	public int update(BoardVO board) {
-		
-		return boardMapper.update(board);
-	}
+//	@Override
+//	public int update(BoardVO board) {
+//		
+//		return boardMapper.update(board);
+//	}
 
 	@Override
 	public int getTotalCnt(Criteria cri) {
@@ -109,4 +139,28 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.updateReplyCnt(bno, amount);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int insertSelectKey(BoardVO board, List<MultipartFile> files) throws Exception {
+
+		// 게시물 등록
+		int res = boardMapper.insertSelectKey(board);
+		
+		// 파일 첨부
+		fileuploadService.fileupload(files, board.getBno());
+		
+		
+		return res;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int update(BoardVO board, List<MultipartFile> files) throws Exception {
+		// 게시물 수정
+		int res = boardMapper.update(board);
+				
+		// 파일 첨부
+		fileuploadService.fileupload(files, board.getBno());
+		return res;
+	}
 }

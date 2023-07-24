@@ -139,9 +139,18 @@ console.log('reply.js======');
 				replyDivStr += ''
 				+ '	    <tr id="tr'+ reply.rno +'" data-value="' + reply.reply + '">                             '
 				+ '	      <th scope="row">'+ reply.rno +'</th>         '
-				+ '	      <td class="text-start">' + reply.reply 
-				+ '			<i class="fa-solid fa-keyboard" onclick="replyUpdate('+ reply.rno +')"></i>'
-				+ '			<i class="fa-solid fa-trash" onclick="replyDelete('+ reply.rno +')"></i>'		
+				+ '	      <td class="text-start">' + reply.reply;
+				
+				// view.jsp 페이지에 type="text" id="replyer" value="${userId }" id 값
+				// replyer.value : 로그인한 아이디
+				// reply.replyer : 답글 작성자
+				if(replyer.value == reply.replyer){
+					replyDivStr += ''
+						+ '			<i class="fa-solid fa-keyboard" onclick="replyUpdate('+ reply.rno +')"></i>'
+						+ '			<i class="fa-solid fa-trash" onclick="replyDelete('+ reply.rno +')"></i>';	
+				}
+				
+				replyDivStr += ''
 				+ '		  </td>                  '
 				+ '	      <td>' + reply.replyer + '</td>                  '
 				+ '	      <td>' + reply.replyDate + '</td>                  '

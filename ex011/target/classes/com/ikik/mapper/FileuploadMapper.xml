@@ -26,6 +26,17 @@
 			and uuid = #{uuid}
 	</delete>
 	
+	<select id="getOne" resultType="com.ikik.vo.FileuploadVO">
+		select t.*
+		        , uploadpath||uuid||'_'||filename savePath
+        		, decode(filetype, 'I'
+                			, uploadpath||'s_'||uuid||'_'||filename
+                			,'') s_savePath 
+		  from tbl_attach t
+		 where bno=#{bno}
+			and uuid = #{uuid}
+	</select>
+	
 	
 	
 	<select id="getListx" resultType="com.ikik.vo.FileuploadVO">
@@ -37,7 +48,7 @@
 	<select id="getListxx" resultType="com.ikik.vo.FileuploadVO">
 		select t.*
 	        , uploadpath||uuid||'_'||fileName savePath
-	        , 's_'||uploadpath||uuid||'_'||fileName s_savePath
+	        , uploadpath||'s_'||uuid||'_'||fileName s_savePath
 			 from tbl_attach t
 			where bno=#{bno}
 	</select>

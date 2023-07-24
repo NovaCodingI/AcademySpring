@@ -1,5 +1,7 @@
 package com.ikik.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +9,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ikik.service.BoardService;
@@ -141,11 +144,13 @@ public class BoardController {
 	 * @param rttr
 	 * @param model
 	 * @return
+	 * @throws Exception 
 	 */
 	@PostMapping("write")
 	// 기본타입은 메모리 공간안에 바로 저장
 	// 페이지가 아니라 어떤 처리를 할꺼야 하면 같은 이름보다는 Action과 같이 뒤에 표시를 해주면 좋아요
 	public String writeAction(BoardVO board
+								, List<MultipartFile> files
 								, RedirectAttributes rttr
 								, Model model) {
 //		req.setCharacterEncoding("utf-8"); // web.xml에 필터가 알아서 처리합니다. // (HttpServletRequest req) 매개변수
@@ -154,30 +159,46 @@ public class BoardController {
 //		int res = boardService.insert(board);
 		// 레퍼런스의 타입이기때문에 변경사항이 있으면 유지가 되는것 (주소값으로 판단)
 		// 시퀀스 조회 후 시퀀스 번호를 bno에 저장
-		int res = boardService.insertSelectKey(board);
-
-		String msg = "";
-		// 실패 Test를 하고싶다면 부등호만 바꿔서 한번 해봅시다
-//		if(res<0) {
-		if(res>0) {
-			msg = board.getBno() + "번 등록되었습니다";
-//			msg = "등록되었습니다";
-			// url?msg=등록 (쿼리스트링으로 전달 -> param.msg)
-//			rttr.addAttribute("msg", msg);
+		// 게시물등록 및 파일 첨부
+		int res;
+		
+		try {
+			res = boardService.insertSelectKey(board, files);
+			String msg = "";
+			// 실패 Test를 하고싶다면 부등호만 바꿔서 한번 해봅시다
+//			if(res<0) {
+			if(res>0) {
+				msg = board.getBno() + "번 등록되었습니다";
+//				msg = "등록되었습니다";
+				// url?msg=등록 (쿼리스트링으로 전달 -> param.msg)
+//				rttr.addAttribute("msg", msg);
+				
+				// 세션영역에 저장 -> msg
+				// 새로고침시 유지되지 않음
+				rttr.addFlashAttribute("msg", msg); // 근데 알람이 안떠요.. param.msg로 부르지말고 msg로 부르면 돼요
+				return "redirect:/board/list";
+			} else {
+				msg = "등록중 예외사항이 발생 하였습니다.";
+				model.addAttribute("msg", msg);
+				return "/board/message";
+			}
+//			model.addAttribute("board", boardService.insert(board));
+//			model.addAttribute("msg", msg);
+		    // return "/board/write"; // 요청하는 그대로 반환하는것 void, board에 있는 write 요청에 있는 board
+		    // return "write"; // WEB-INF/views/ + return + .jsp
 			
-			// 세션영역에 저장 -> msg
-			// 새로고침시 유지되지 않음
-			rttr.addFlashAttribute("msg", msg); // 근데 알람이 안떠요.. param.msg로 부르지말고 msg로 부르면 돼요
-			return "redirect:/board/list";
-		} else {
-			msg = "등록중 예외사항이 발생 하였습니다.";
-			model.addAttribute("msg", msg);
-			return "/board/message";
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			if(e.getMessage().indexOf("첨부파일")>-1) {
+				model.addAttribute("msg", e.getMessage());
+			} else {
+				model.addAttribute("msg", "등록중 예외사항이 발생 하였습니다.");
+			}
+			e.printStackTrace();
+			
+			return "board/message";
 		}
-//		model.addAttribute("board", boardService.insert(board));
-//		model.addAttribute("msg", msg);
-	    // return "/board/write"; // 요청하는 그대로 반환하는것 void, board에 있는 write 요청에 있는 board
-	    // return "write"; // WEB-INF/views/ + return + .jsp
+
 	}
 	
 	/**
@@ -225,6 +246,7 @@ public class BoardController {
 	@PostMapping("editAction")
 //	public String editAction(BoardVO board, Criteria cri, RedirectAttributes rttr, Model model) {
 	public String editAction(BoardVO board
+							, List<MultipartFile> files
 							, Criteria cri
 							, RedirectAttributes rttr
 							, Model model) {
@@ -242,32 +264,46 @@ public class BoardController {
 		// → ${pageNo}
 		
 		// 수정
-		int res = boardService.update(board);
-		
-		if(res>0) {
-			// addAttribute(파라메터 영역에 저장됩니다)
-//			model.addAttribute("msg", "수정 되었습니다.");
+		int res;
+		try {
+			res = boardService.update(board, files);
 			
-			// 세션영역에 저장 (잠깐있다가 사라짐)
-			rttr.addFlashAttribute("msg", "수정되었습니다.");
-			// 출력시 {msg} 
-			// 상세페이지로 이동
-			// 다른 url를 호출하고싶은거에요 redirect해줘야죠 근데 메세지가 안떠 리퀘스트영역이 공유가 안되어있어서
-			// RedirectAttributes rttr 객체를 이용해서 사용합니다.
-			// Redirect 할때는 model에다 넣어도 소용이 없습니다. (request 영역이 공유 되지 않으므로)
+			if(res>0) {
+				// addAttribute(파라메터 영역에 저장됩니다)
+//				model.addAttribute("msg", "수정 되었습니다.");
+				
+				// 세션영역에 저장 (잠깐있다가 사라짐)
+				rttr.addFlashAttribute("msg", "수정되었습니다.");
+				// 출력시 {msg} 
+				// 상세페이지로 이동
+				// 다른 url를 호출하고싶은거에요 redirect해줘야죠 근데 메세지가 안떠 리퀘스트영역이 공유가 안되어있어서
+				// RedirectAttributes rttr 객체를 이용해서 사용합니다.
+				// Redirect 할때는 model에다 넣어도 소용이 없습니다. (request 영역이 공유 되지 않으므로)
+				
+				// ?~~ 쿼리스트링으로 넘어갑니다. 주소표시줄에 블라블라, 파라메터로 넘어갑니다.
+				// rttr.addAttribute(attributeValue);
+				rttr.addAttribute("pageNo", cri.getPageNo());
+				rttr.addAttribute("searchField", cri.getSearchField());
+				rttr.addAttribute("searchWord", cri.getSearchWord());
+				
+				// redirect 는 화면에다가 다시 웹브라우저에 url 정보를 넘기는것(알려주는것)
+				return "redirect:/board/view?bno=" + board.getBno();
+			} else {
+				model.addAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
+//				rttr.addFlashAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
+				return "/board/message";
+			}
 			
-			// ?~~ 쿼리스트링으로 넘어갑니다. 주소표시줄에 블라블라, 파라메터로 넘어갑니다.
-			// rttr.addAttribute(attributeValue);
-			rttr.addAttribute("pageNo", cri.getPageNo());
-			rttr.addAttribute("searchField", cri.getSearchField());
-			rttr.addAttribute("searchWord", cri.getSearchWord());
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			if(e.getMessage().indexOf("첨부파일")>-1) {
+				model.addAttribute("msg", e.getMessage());
+			} else {
+				model.addAttribute("msg", "등록중 예외사항이 발생 하였습니다.");
+			}
+			e.printStackTrace();
 			
-			// redirect 는 화면에다가 다시 웹브라우저에 url 정보를 넘기는것(알려주는것)
-			return "redirect:/board/view?bno=" + board.getBno();
-		} else {
-			model.addAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
-//			rttr.addFlashAttribute("msg", "수정중 예외사항이 발생 하였습니다.");
-			return "/board/message";
+			return "board/message";
 		}
 		
 	}
@@ -276,7 +312,8 @@ public class BoardController {
 	@PostMapping("edit")
 	public String edit(BoardVO paramVO
 						, RedirectAttributes rttr
-						, Model model) {
+						, List<MultipartFile> files
+						, Model model) throws Exception {
 		BoardVO board = boardService.getOne(paramVO.getBno());
 		model.addAttribute("board", paramVO);
 		log.info("================== board" + paramVO);
@@ -284,7 +321,7 @@ public class BoardController {
 //		int res = boardService.insert(board);
 		// 레퍼런스의 타입이기때문에 변경사항이 있으면 유지가 되는것 (주소값으로 판단)
 		// 시퀀스 조회 후 시퀀스 번호를 bno에 저장
-		int res = boardService.update(board);
+		int res = boardService.update(board, files);
 		System.out.println("=======res : " + res);
 		String msg = "";
 		

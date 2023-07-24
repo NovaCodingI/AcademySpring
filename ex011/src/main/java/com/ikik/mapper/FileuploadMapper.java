@@ -22,5 +22,8 @@ public interface FileuploadMapper {
 //	public int delete(FileuploadVO vo);
 	public int delete(@Param("bno")int bno
 						, @Param("uuid") String uuid);
-
+	
+	public FileuploadVO getOne(@Param("bno")int bno
+									, @Param("uuid") String uuid);
+	
 }

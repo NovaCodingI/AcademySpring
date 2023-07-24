@@ -60,4 +60,11 @@ public class FileuploadTest {
 		log.info("getList()");
 		System.out.println(mapper.getList(30));
 	}
+	
+	@Test
+	public void getOne() {
+		FileuploadVO vo = mapper.getOne(158, "6ce99309-8541-4611-9fcb-7f61398aafef");
+		System.out.println(vo);
+		
+	}
 }
