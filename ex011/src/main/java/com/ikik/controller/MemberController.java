@@ -2,6 +2,7 @@ package com.ikik.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,19 @@ public class MemberController extends CommonRestController{
 
 	@Autowired
 	MemberService service;
+	
+	@GetMapping("/login/naver")
+	public void naverLogin() {
+		
+	}
+	
+	@GetMapping("/login/naver_callback")
+	public String naverLogin_callback(HttpServletRequest request
+									, Model model) {
+		service.naverLogin(request, model);
+		
+		return "/login/naver";
+	}
 	
 	@GetMapping("/login")
 	public String login() {

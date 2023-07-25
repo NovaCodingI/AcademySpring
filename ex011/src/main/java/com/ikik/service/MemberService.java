@@ -1,6 +1,9 @@
 package com.ikik.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.ikik.vo.MemberVO;
 
@@ -12,6 +15,8 @@ public interface MemberService {
 	public int signUp(MemberVO memberVO);
 	
 	public int idCheck(MemberVO memberVO);
+
+	public void naverLogin(HttpServletRequest request, Model model);
 	
 // public class MemberService {
 	
