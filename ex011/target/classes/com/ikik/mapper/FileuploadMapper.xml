@@ -53,4 +53,5 @@
 			where bno=#{bno}
 	</select>
 	
+	
 </mapper>

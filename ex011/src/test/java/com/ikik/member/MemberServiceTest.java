@@ -68,5 +68,5 @@ public class MemberServiceTest {
 		System.out.println("결과" + res);
 		
 	}
-
+	
 }

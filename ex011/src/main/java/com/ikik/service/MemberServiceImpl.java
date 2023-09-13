@@ -28,6 +28,9 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	BCryptPasswordEncoder encoder;
 	
+	@Autowired
+	MemberService memberService;
+	
 	
 	@Override
 	public MemberVO login(MemberVO paramMember) {
@@ -173,4 +176,6 @@ public class MemberServiceImpl implements MemberService{
 		      throw new Exception("callback 처리중 예외사항이 발생 하였습니다.");
 		    }
 	}
+	
+
 }

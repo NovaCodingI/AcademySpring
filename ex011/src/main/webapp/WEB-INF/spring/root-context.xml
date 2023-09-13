@@ -20,11 +20,19 @@
 	<context:component-scan base-package="com.ikik.aop"></context:component-scan>
 
 	<!-- 커넥션풀 관련소스 -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+<!-- 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
 		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl"></property>
 		<property name="username" value="library"></property>
 		<property name="password" value="1234">	</property>
+	</bean> -->
+	
+	<!-- MySQL -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://database-1.crqu7bohmwtz.ap-northeast-2.rds.amazonaws.com/board"></property>
+		<property name="username" value="admin"></property>
+		<property name="password" value="dlrwns12">	</property>
 	</bean>
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
@@ -56,7 +64,8 @@
 	    <property name="maxUploadSize" value="104857560"></property>
 	    <!-- 1024 * 1024 * 2 bytes  2MB -->
 	    <property name="maxUploadSizePerFile" value="2097152"></property>
-	    <property name="uploadTempDir" value ="file:/C:/upload/tmp"></property>
+	    <!-- C드라이브 못찾아 구조가 달라서.. 드라이브가 없어서..-->
+	    <!-- <property name="uploadTempDir" value ="file:/C:/upload/tmp"></property> -->
 	    <property name="maxInMemorySize" value="10485756"></property>
 	</bean>
 	
